@@ -3,7 +3,6 @@ package rest
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 
@@ -105,11 +104,6 @@ func queryConsensusStateHandlerFn(cliCtx context.CLIContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		clientID := vars[RestClientID]
-		height, err := strconv.ParseUint(vars[RestRootHeight], 10, 64)
-		if err != nil {
-			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
-			return
-		}
 
 		prove := rest.ParseQueryParamBool(r, flags.FlagProve)
 
@@ -118,7 +112,7 @@ func queryConsensusStateHandlerFn(cliCtx context.CLIContext) http.HandlerFunc {
 			return
 		}
 
-		csRes, err := utils.QueryConsensusState(cliCtx, clientID, height, prove)
+		csRes, err := utils.QueryConsensusState(cliCtx, clientID, uint64(cliCtx.Height), prove)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
 			return
