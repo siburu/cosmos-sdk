@@ -55,7 +55,7 @@ func QueryConnection(
 	}
 
 	var connection types.ConnectionEnd
-	if err := cliCtx.Codec.UnmarshalBinaryBare(res.Value, &connection); err != nil {
+	if err := types.SubModuleCdc.UnmarshalBinaryBare(res.Value, &connection); err != nil {
 		return types.ConnectionResponse{}, err
 	}
 
